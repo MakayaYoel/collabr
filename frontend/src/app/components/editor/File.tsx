@@ -11,14 +11,14 @@ const extensionToIcon = (extension: string) => ({
     'javascript': 'javascript',
     'typescript': 'typescript',
     'py': 'python'
-})[extension] ?? 'file';
+})[extension] ?? null;
 
 function File({ fileExtension, fileName }: FileProps) {
     return (
         <div className="flex items-center mt-6 justify-between">
             <div>
                 <Button className="h-[35px] w-[35px] mr-4" variant='outline'>
-                    <i className={`devicon-${extensionToIcon(fileExtension)}-plain text-lg`}></i>
+                    <i className={(extensionToIcon(fileExtension) == null ? 'bx bx-question-mark' : `devicon-${extensionToIcon(fileExtension)}-plain`) + ' text-lg'}></i>
                 </Button>
 
                 <span className="hover:underline cursor-pointer">{ fileName }</span>

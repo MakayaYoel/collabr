@@ -2,15 +2,14 @@ import { Card } from "@/components/ui/card";
 import EditorLanguageDropdown from "./LanguageDropdown";
 import { Button } from "@/components/ui/button";
 import EditorNavigationOption from "./NavigationOption";
+import HomeButton from "./HomeButton";
 
 function EditorNaviation() {
     return (
         <div className="bg-[#0A0A0A] border-b-[1px] border-b-[rgba(255, 255, 255, 0.6)] p-6 h-[95px]">
             <div className="flex justify-between items-center">
                 <div className="flex gap-4">
-                    <Button variant='outline' className="w-[40px] h-[40px] flex justify-center items-center cursor-pointer">
-                        <i className='bx bx-home text-xl'></i>
-                    </Button>
+                    <HomeButton />
 
                     <div className="h-[40px] w-[1px] border-[1px] border-[rgba(255, 255, 255, 0.6)]"></div>
 

@@ -5,12 +5,13 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { v4 as uuid } from 'uuid';
 import { FormEvent, useState } from "react";
-import createRoom from "@/app/actions/createRoom";
 import { useRouter } from "next/navigation";
+import { useAppContext } from "@/app/context/AppContext";
 
 function HomeForm() {
     const [error, setError] = useState<string | null>(null);
     const router = useRouter();
+    const { setUsername, setRoomId } = useAppContext();
 
     const generateUUID = () => {
         const roomIDInput = document.getElementById('roomID') as HTMLFormElement;
@@ -29,10 +30,9 @@ function HomeForm() {
             return;
         }
 
-        if(typeof window !== undefined && typeof window.localStorage !== undefined) {
-            localStorage.setItem('username', username);
-            router.push(`/editor/${roomID}`);
-        }
+        setUsername(username);
+        setRoomId(roomID);
+        router.push(`/editor/${roomID}`);
     };
 
     return (

@@ -19,16 +19,7 @@ function EditorSidebar() {
                 </header>
 
                 <div className="pl-4">
-                    <File fileExtension="php" fileName="index.php" />
-                    <File fileExtension="go" fileName="main.go" />
-                    <File fileExtension="javascript" fileName="app.js" />
-                    <File fileExtension="typescript" fileName="dashboard.ts" />
-                    <File fileExtension="py" fileName="server.py" />
-                    <File fileExtension="php" fileName="auth.php" />
-                    <File fileExtension="go" fileName="handler.go" />
-                    <File fileExtension="javascript" fileName="utils.js" />
-                    <File fileExtension="typescript" fileName="types.ts" />
-                    <File fileExtension="py" fileName="config.py" />
+                    <File fileExtension="javascript" fileName="HelloWorld.js" />
                 </div>
 
                 <EditorUserProfile />
