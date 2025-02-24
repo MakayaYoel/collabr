@@ -16,6 +16,7 @@ export default function RootLayout({
     <html lang="en" className='dark'>
       <head>
         <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet' />
+        <link rel="stylesheet" type='text/css' href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css" />
       </head>
       <body className={satoshiFont.className}>
         {children}

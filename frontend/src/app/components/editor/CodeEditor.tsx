@@ -4,10 +4,7 @@ import { Editor } from "@monaco-editor/react";
 
 function CodeEditor() {
     return (
-        <section className="h-screen w-full">
-            <header className="h-[100px] w-full bg-black"></header>
-            <Editor
-                height="100px"
+        <Editor
                 defaultLanguage="javascript"
                 theme="vs-dark"
                 options={{
@@ -29,9 +26,7 @@ function CodeEditor() {
                     letterSpacing: 0.5,
                     roundedSelection: true,
                 }}
-                className="h-[calc(100vh-100px)]"
             />
-        </section>
     );
 }
 

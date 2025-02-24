@@ -5,7 +5,7 @@ import EditorNavigationOption from "./NavigationOption";
 
 function EditorNaviation() {
     return (
-        <div className="bg-[#0A0A0A] border-b-[1px] border-b-[rgba(255, 255, 255, 0.6)] p-6">
+        <div className="bg-[#0A0A0A] border-b-[1px] border-b-[rgba(255, 255, 255, 0.6)] p-6 h-[95px]">
             <div className="flex justify-between items-center">
                 <div className="flex gap-4">
                     <Button variant='outline' className="w-[40px] h-[40px] flex justify-center items-center cursor-pointer">

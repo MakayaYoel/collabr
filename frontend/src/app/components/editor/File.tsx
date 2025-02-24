@@ -6,19 +6,19 @@ type FileProps = {
 };
 
 const extensionToIcon = (extension: string) => ({
-    'html': 'html5',
     'php': 'php',
-    'go': 'go-lang',
+    'go': 'go',
+    'javascript': 'javascript',
     'typescript': 'typescript',
-    'javascript': 'javascript'
-})[extension];
+    'py': 'python'
+})[extension] ?? 'file';
 
 function File({ fileExtension, fileName }: FileProps) {
     return (
         <div className="flex items-center mt-6 justify-between">
             <div>
                 <Button className="h-[35px] w-[35px] mr-4" variant='outline'>
-                    <i className={`bx bxl-${extensionToIcon(fileExtension)}`} ></i>
+                    <i className={`devicon-${extensionToIcon(fileExtension)}-plain text-lg`}></i>
                 </Button>
 
                 <span className="hover:underline cursor-pointer">{ fileName }</span>
