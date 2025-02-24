@@ -1,14 +1,14 @@
-import TestingUsername from "@/app/components/forms/test";
+import CodeEditor from "@/app/components/editor/CodeEditor";
 
 async function EditorPage({ params } : { params: Promise<{ roomID: string }> }) {
     const { roomID } = await params;
     
     return (
-        <div>
-            HELLO: {roomID}
-
-            <TestingUsername />
-        </div>
+        <main className="flex">
+            <div className="h-screen bg-black w-[300px] rounded-lg"></div>
+            <CodeEditor />
+            <div className="h-screen bg-black w-[300px] rounded-lg"></div>
+        </main>
     );
 }
 
