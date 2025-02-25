@@ -1,8 +1,11 @@
 'use client';
 
+import { useEditorContext } from "@/app/context/EditorContext";
 import { Editor } from "@monaco-editor/react";
 
 function CodeEditor() {
+    const { setCode } = useEditorContext();
+
     return (
         <Editor
                 defaultLanguage="javascript"
@@ -26,6 +29,7 @@ function CodeEditor() {
                     letterSpacing: 0.5,
                     roundedSelection: true,
                 }}
+                onChange={(value) => setCode(value)}
             />
     );
 }

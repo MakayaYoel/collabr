@@ -13,7 +13,7 @@ import {
 import { useState } from "react";
 
 function EditorLanguageDropdown() {
-    const [language, setLanguage] = useState("python")
+    const [language, setLanguage] = useState("javascript")
  
     return (
         <DropdownMenu>
@@ -25,8 +25,8 @@ function EditorLanguageDropdown() {
             <DropdownMenuLabel>Select Language</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuRadioGroup value={language} onValueChange={setLanguage}>
-              <DropdownMenuRadioItem value="python">Python</DropdownMenuRadioItem>
               <DropdownMenuRadioItem value="javascript">JavaScript</DropdownMenuRadioItem>
+              <DropdownMenuRadioItem value="python">Python</DropdownMenuRadioItem>
               <DropdownMenuRadioItem value="typescript">TypeScript</DropdownMenuRadioItem>
               <DropdownMenuRadioItem value="php">PHP</DropdownMenuRadioItem>
               <DropdownMenuRadioItem value="go">Go</DropdownMenuRadioItem>

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import satoshiFont from "./lib/font";
 import { AppContextProvider } from "./context/AppContext";
+import { EditorContextProvider } from "./context/EditorContext";
 
 export const metadata: Metadata = {
   title: "collabr",
@@ -21,7 +22,9 @@ export default function RootLayout({
       </head>
       <body className={satoshiFont.className}>
         <AppContextProvider>
-          {children}
+          <EditorContextProvider>
+            {children}
+          </EditorContextProvider>
         </AppContextProvider>
       </body>
     </html>

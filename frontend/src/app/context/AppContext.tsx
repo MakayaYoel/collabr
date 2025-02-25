@@ -2,7 +2,7 @@
 
 import { createContext, useState, useEffect, useContext } from "react";
 
-interface AppContextType {
+type AppContextType = {
     roomId: string;
     username: string;
     setRoomId: (roomId: string) => void;
