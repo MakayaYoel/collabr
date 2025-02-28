@@ -4,7 +4,8 @@ import { useAppContext } from "@/app/context/AppContext";
 import { Card } from "@/components/ui/card";
 
 function EditorUserProfile() {
-    const { username, roomId } = useAppContext();
+    const { currentUser } = useAppContext();
+    const { roomId, username } = currentUser;
 
     return ( 
         <Card className="p-4 mt-6">

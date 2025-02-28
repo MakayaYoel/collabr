@@ -4,7 +4,7 @@ import { useEditorContext } from "@/app/context/EditorContext";
 import { Editor } from "@monaco-editor/react";
 
 function CodeEditor() {
-    const { setCode } = useEditorContext();
+    const { code, setCode } = useEditorContext();
 
     return (
         <Editor
@@ -29,6 +29,7 @@ function CodeEditor() {
                     letterSpacing: 0.5,
                     roundedSelection: true,
                 }}
+                value={code}
                 onChange={(value) => setCode(value)}
             />
     );

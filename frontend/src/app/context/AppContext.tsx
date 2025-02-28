@@ -1,12 +1,16 @@
 'use client';
 
 import { createContext, useState, useEffect, useContext } from "react";
+import { io, Socket } from 'socket.io-client';
 
 type AppContextType = {
-    roomId: string;
+    currentUser: User;
+    setCurrentUser: (newCurrentUser: User) => void;
+}
+
+interface User {
     username: string;
-    setRoomId: (roomId: string) => void;
-    setUsername: (username: string) => void;
+    roomId: string;
 }
 
 const AppContext = createContext<AppContextType | null>(null);
@@ -24,6 +28,11 @@ export const useAppContext = () : AppContextType => {
 export const AppContextProvider = ({ children }: Readonly<{ children: React.ReactNode }>) => {
     const [roomId, setStateRoomId] = useState<string>('');
     const [username, setStateUsername] = useState<string>('');
+    const [currentUser, setStateCurrentUser] = useState<User>({
+        username,
+        roomId,
+    });
+
 
     // Attempt to load data from local storage
     useEffect(() => {
@@ -31,27 +40,30 @@ export const AppContextProvider = ({ children }: Readonly<{ children: React.Reac
             const storageRoomId = localStorage.getItem('roomId');
             const storageUsername = localStorage.getItem('username');
 
-            if(storageRoomId) setStateRoomId(storageRoomId);
-            if(storageUsername) setStateUsername(storageUsername);
+            if(storageRoomId && storageUsername) {
+                setStateUsername(storageUsername);
+                setStateRoomId(storageRoomId);
+
+                setStateCurrentUser({ username: storageUsername, roomId: storageRoomId });
+            }   
         }
+        
     }, []);
 
-    const setUsername = (username: string) => {
+    const setCurrentUser = ({ username, roomId }: User) => {
         if(typeof window !== 'undefined' && typeof window.localStorage !== 'undefined') {
             setStateUsername(username);
             localStorage.setItem('username', username);
+
+            setStateRoomId(roomId);
+            localStorage.setItem('roomId', roomId);
+
+            setStateCurrentUser({ username, roomId })
         }
     };
 
-    const setRoomId = (roomId: string) => {
-        if(typeof window !== 'undefined' && typeof window.localStorage !== 'undefined') {
-            setStateRoomId(roomId);
-            localStorage.setItem('roomId', roomId);
-        }
-    }
-
     return (
-        <AppContext.Provider value={{ roomId, username, setRoomId, setUsername }}>
+        <AppContext.Provider value={{ currentUser, setCurrentUser }}>
             {children}
         </AppContext.Provider>
     );
