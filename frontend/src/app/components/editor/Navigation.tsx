@@ -12,7 +12,7 @@ function EditorNaviation() {
 
     const runCode = async () => {
         try {
-            if(code == undefined || code.trim().length == 0) {
+            if(code == undefined || !code.trim()) {
                 throw new Error('No code inputted.');
             }
             

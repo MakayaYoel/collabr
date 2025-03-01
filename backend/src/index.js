@@ -12,9 +12,9 @@ const io = new Server(server, {
 });
 
 io.on('connection', (socket) => {
-    socket.on('code-change', (code) => {
-        io.emit('code-change', code);
-        console.log('code change: ' + code);
+    socket.on('code-update', (code) => {
+        io.emit('code-update', code);
+        console.log('code update: ' + code);
     })
     console.log('a socket has connected');
 });

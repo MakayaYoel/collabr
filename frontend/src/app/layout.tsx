@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import satoshiFont from "./lib/font";
-import { AppContextProvider } from "./context/AppContext";
-import { EditorContextProvider } from "./context/EditorContext";
+import ContextProvider from "./context/ContextProvider";
 
 export const metadata: Metadata = {
   title: "collabr",
@@ -21,11 +20,9 @@ export default function RootLayout({
         <link rel="stylesheet" type='text/css' href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css" />
       </head>
       <body className={satoshiFont.className}>
-        <AppContextProvider>
-          <EditorContextProvider>
-            {children}
-          </EditorContextProvider>
-        </AppContextProvider>
+        <ContextProvider>
+          {children}
+        </ContextProvider>
       </body>
     </html>
   );

@@ -4,28 +4,33 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { v4 as uuid } from 'uuid';
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
+import { useUserContext } from "@/app/context/UserContext";
 import { useRouter } from "next/navigation";
-import { useAppContext } from "@/app/context/AppContext";
 
 function HomeForm() {
     const [error, setError] = useState<string | null>(null);
+    const { setCurrentUser } = useUserContext();
+    const roomIdInputRef = useRef<HTMLInputElement | null>(null);
+    const usernameInputRef = useRef<HTMLInputElement | null>(null);
     const router = useRouter();
-    const { setCurrentUser } = useAppContext();
 
     const generateUUID = () => {
-        const roomIDInput = document.getElementById('roomID') as HTMLFormElement;
-        roomIDInput.value = uuid();
+        if(!roomIdInputRef.current) return "";
+
+        roomIdInputRef.current.value = uuid();
     };
 
     const handleFormSubmit = async (e: FormEvent) => {
         e.preventDefault();
         setError(null);
-        
-        const roomId = (document.getElementById('roomID') as HTMLFormElement).value as string;
-        const username = (document.getElementById('username') as HTMLFormElement).value as string;
 
-        if(roomId.length == 0 || username.length == 0) {
+        if(!roomIdInputRef.current || !usernameInputRef.current) return;
+        
+        const roomId = roomIdInputRef.current.value;
+        const username = usernameInputRef.current.value;
+
+        if(!roomId.trim() || !username.trim()) {
             setError('Please enter a room ID and username.');
             return;
         }
@@ -43,17 +48,27 @@ function HomeForm() {
         <form className="flex flex-col gap-4" onSubmit={handleFormSubmit}>
             { error && <span className="text-red-500 text-sm text-center">{error}</span>}
             <section>
-                <Label htmlFor="roomID">Room ID</Label>
+                <Label htmlFor="roomId">Room ID</Label>
 
-                <div className="flex gap-2">
-                    <Input id="roomID" placeholder="Enter a Room ID..." autoComplete="off" />
+                <div className="flex-col flex gap-2 sm:flex-row">
+                    <Input
+                        id="roomId"
+                        placeholder="Enter a Room ID..." 
+                        autoComplete="off"
+                        ref={roomIdInputRef}
+                    />
                     <Button onClick={generateUUID} type='button' variant="outline">Generate</Button>
                 </div>
             </section>
             
             <section>
                 <Label htmlFor="username">Username</Label>
-                <Input name="username" id="username" placeholder="Enter a Username..." autoComplete="off" />
+                <Input
+                    id="username"
+                    placeholder="Enter a Username..." 
+                    autoComplete="off" 
+                    ref={usernameInputRef}
+                />
             </section>
         
             <Button type='submit' variant="outline" className="w-full">Create/Join Room</Button>

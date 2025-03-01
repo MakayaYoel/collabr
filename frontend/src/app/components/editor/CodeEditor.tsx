@@ -1,10 +1,20 @@
 'use client';
 
 import { useEditorContext } from "@/app/context/EditorContext";
+import { useSocketContext } from "@/app/context/SocketContext";
+import { SocketEvent } from "@/lib/socketEvents";
 import { Editor } from "@monaco-editor/react";
 
 function CodeEditor() {
     const { code, setCode } = useEditorContext();
+    const { currentSocket } = useSocketContext();
+
+    const handleCodeChange = (value: string | undefined) => {
+        if(!currentSocket) return; // TODO - show "Connecting..." toast
+
+        currentSocket.emit(SocketEvent.CODE_UPDATE, value);
+        setCode(value);
+    };
 
     return (
         <Editor
@@ -30,7 +40,7 @@ function CodeEditor() {
                     roundedSelection: true,
                 }}
                 value={code}
-                onChange={(value) => setCode(value)}
+                onChange={handleCodeChange}
             />
     );
 }

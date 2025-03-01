@@ -1,10 +1,10 @@
 'use client';
 
-import { useAppContext } from "@/app/context/AppContext";
+import { useUserContext } from "@/app/context/UserContext";
 import { Card } from "@/components/ui/card";
 
 function EditorUserProfile() {
-    const { currentUser } = useAppContext();
+    const { currentUser } = useUserContext();
     const { roomId, username } = currentUser;
 
     return ( 

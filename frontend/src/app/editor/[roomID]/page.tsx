@@ -2,7 +2,6 @@ import CodeEditor from "@/app/components/editor/CodeEditor";
 import EditorCodeOutput from "@/app/components/editor/CodeOutput";
 import EditorNaviation from "@/app/components/editor/Navigation";
 import EditorSidebar from "@/app/components/editor/Sidebar";
-import { Button } from "@/components/ui/button";
 
 async function EditorPage({ params } : { params: Promise<{ roomID: string }> }) {
     const { roomID } = await params;
