@@ -42,15 +42,12 @@ function HomeForm() {
         socket.emit(SocketEvent.ATTEMPT_JOIN, { roomId, username });
     };
 
-    // Clear once they go to the home screen.
-    useEffect(() => {
-        setCurrentUser({ username: '', roomId: '' });
-        setCurrentStatus(UserStatus.IDLE);
-    }, []);
-
     useEffect(() => {
         if(currentStatus == UserStatus.JOINED_ROOM) {
             router.push(`/editor/${currentUser.roomId}`);
+        } else if(currentStatus == UserStatus.DISCONNECTING) {
+            setCurrentUser({ username: '', roomId: ''});
+            setCurrentStatus(UserStatus.IDLE);
         }
     }, [currentStatus]);
 

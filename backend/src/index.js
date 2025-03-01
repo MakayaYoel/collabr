@@ -11,7 +11,21 @@ const io = new Server(server, {
     }
 });
 
-const rooms = {};
+const rooms = new Map();
+
+function getUserRoom(clientSocketId) {
+    let userRoomId = "";
+
+    rooms.forEach((room) => {
+        room.users.forEach(({ roomId, socketId }) => {
+            if(clientSocketId == socketId) {
+                userRoomId = roomId;
+            }
+        });
+    });
+
+    return userRoomId || null;
+}
 
 io.on('connection', (socket) => {
     socket.on('code-update', ({ roomId, code }) => {
@@ -19,23 +33,44 @@ io.on('connection', (socket) => {
     });
 
     socket.on('attempt-join', ({ username, roomId }) => {
-        // TODO - verify username for duplicates
+        const user = { username, roomId, socketId: socket.id };
 
-        const user = { username, roomId };
-
-        if(rooms[roomId]) {
-            rooms[roomId]['users'].push({ username, roomId });
-        } else {
-            rooms[roomId] = { users: [user] }
+        if(!rooms.has(roomId)) {
+            rooms.set(roomId, { users: new Map() });
         }
+
+        const room = rooms.get(roomId);
+        room.users.set(socket.id, user);
 
         socket.join(roomId);
         io.to(socket.id).emit('joined-room', { username, roomId });
-
-        console.log(username + ' has connected to room: ' + roomId);
-        console.log(rooms);
     });
-    
+
+    // disconnecting from clicking home button
+    socket.on('leave-room', () => {
+        const userRoom = getUserRoom(socket.id);
+        if(!userRoom) return;
+
+        const room = rooms.get(userRoom);
+        room.users.delete(socket.id);
+        socket.leave(userRoom);
+
+        if(room.users.size == 0) rooms.delete(userRoom);
+
+        io.to(socket.id).emit('leave-room');
+    });
+
+    // disconnecting from reloading
+    socket.on('disconnect', () => {
+        const userRoom = getUserRoom(socket.id);
+        if(!userRoom) return;
+
+        const room = rooms.get(userRoom);
+        room.users.delete(socket.id);
+        socket.leave(userRoom);
+
+        if(room.users.size == 0) rooms.delete(userRoom);
+    });
 });
 
 server.listen(5000, () => {

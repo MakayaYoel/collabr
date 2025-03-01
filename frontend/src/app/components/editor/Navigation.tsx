@@ -3,12 +3,13 @@
 import EditorLanguageDropdown from "./LanguageDropdown";
 import { Button } from "@/components/ui/button";
 import EditorNavigationOption from "./NavigationOption";
-import { useRouter } from "next/navigation";
 import { useEditorContext } from "@/app/context/EditorContext";
+import { useSocketContext } from "@/app/context/SocketContext";
+import { SocketEvent } from "@/lib/socketEvents";
 
 function EditorNaviation() {
-    const router = useRouter();
     const { code, setCodeOutput } = useEditorContext();
+    const { socket } = useSocketContext();
 
     const runCode = async () => {
         try {
@@ -29,11 +30,13 @@ function EditorNaviation() {
         }
     };
 
+    const leaveRoom = () => socket.emit(SocketEvent.LEAVE_ROOM);
+
     return (
         <div className="bg-[#0A0A0A] border-b-[1px] border-b-[rgba(255, 255, 255, 0.6)] p-6 h-[95px]">
             <div className="flex justify-between items-center">
                 <div className="flex gap-4">
-                    <Button variant='outline' className="w-[40px] h-[40px] flex justify-center items-center cursor-pointer" onClick={() => router.push('/')}>
+                    <Button variant='outline' className="w-[40px] h-[40px] flex justify-center items-center cursor-pointer" onClick={leaveRoom}>
                         <i className='bx bx-home text-xl'></i>
                     </Button>
 
