@@ -7,12 +7,12 @@ import { Editor } from "@monaco-editor/react";
 
 function CodeEditor() {
     const { code, setCode } = useEditorContext();
-    const { currentSocket } = useSocketContext();
+    const { socket } = useSocketContext();
 
     const handleCodeChange = (value: string | undefined) => {
-        if(!currentSocket) return; // TODO - show "Connecting..." toast
+        if(!socket) return; // TODO - show "Connecting..." toast
 
-        currentSocket.emit(SocketEvent.CODE_UPDATE, value);
+        socket.emit(SocketEvent.CODE_UPDATE, value);
         setCode(value);
     };
 

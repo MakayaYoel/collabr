@@ -1,15 +1,12 @@
 'use client';
 
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { Socket, io } from 'socket.io-client';
-import { useUserContext } from './UserContext';
 import { useEditorContext } from './EditorContext';
 import { SocketEvent } from '@/lib/socketEvents';
 
 type SocketContextType = {
-    currentSocket: Socket | null;
-    
-    setCurrentSocket: (currentSocket: Socket) => void;
+    socket: Socket | null;
 };
 
 const SocketContext = createContext<SocketContextType | null>(null);
@@ -23,33 +20,16 @@ export function useSocketContext() : SocketContextType {
 }
 
 export function SocketContextProvider({ children }: Readonly<{ children: React.ReactNode }>) {
-    const [currentSocket, setCurrentSocket] = useState<Socket | null>(null);
-    const { currentUser } = useUserContext();
     const { setCode } = useEditorContext();
 
-    const handleCodeUpdate = (code: string) => setCode(code);
+    // Only create the socket once for an entire session
+    const socket = useMemo(() => io(process.env.BACKEND_SERVER_URL), []);
 
-    // Create new socket when user has joined a room.
-    useEffect(() => {
-        if(!currentUser.username || !currentUser.roomId) {
-            return; // TODO - add some kind of status variable to know when the user has joined a room.
-        }
-
-        const socket = io(process.env.BACKEND_SERVER_URL);
-
-        socket.on(SocketEvent.CODE_UPDATE, handleCodeUpdate);
-
-        setCurrentSocket(socket);
-
-        // Disconnect on destruct
-        return () => {
-            socket.disconnect();
-            setCurrentSocket(null);
-        }
-    }, [currentUser]);
-
+    // Events
+    socket.on(SocketEvent.CODE_UPDATE, (code: string) => setCode(code));
+    
     return (
-        <SocketContext.Provider value={{ currentSocket, setCurrentSocket }}>
+        <SocketContext.Provider value={{ socket }}>
             {children}
         </SocketContext.Provider>
     );
