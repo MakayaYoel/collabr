@@ -7,10 +7,14 @@ import { v4 as uuid } from 'uuid';
 import { FormEvent, useEffect, useRef, useState } from "react";
 import { useUserContext } from "@/app/context/UserContext";
 import { useRouter } from "next/navigation";
+import { useSocketContext } from "@/app/context/SocketContext";
+import { SocketEvent } from "@/lib/socketEvents";
+import { UserStatus } from "@/lib/userStatuses";
 
 function HomeForm() {
     const [error, setError] = useState<string | null>(null);
-    const { setCurrentUser } = useUserContext();
+    const { setCurrentUser, currentUser, setCurrentStatus, currentStatus } = useUserContext();
+    const { socket } = useSocketContext();
     const roomIdInputRef = useRef<HTMLInputElement | null>(null);
     const usernameInputRef = useRef<HTMLInputElement | null>(null);
     const router = useRouter();
@@ -35,14 +39,20 @@ function HomeForm() {
             return;
         }
 
-        setCurrentUser({ username, roomId });
-        router.push(`/editor/${roomId}`);
+        socket.emit(SocketEvent.ATTEMPT_JOIN, { roomId, username });
     };
 
     // Clear once they go to the home screen.
     useEffect(() => {
         setCurrentUser({ username: '', roomId: '' });
+        setCurrentStatus(UserStatus.IDLE);
     }, []);
+
+    useEffect(() => {
+        if(currentStatus == UserStatus.JOINED_ROOM) {
+            router.push(`/editor/${currentUser.roomId}`);
+        }
+    }, [currentStatus]);
 
     return (
         <form className="flex flex-col gap-4" onSubmit={handleFormSubmit}>

@@ -2,6 +2,7 @@
 
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import { useSessionStorage } from "../hooks/useSessionStorage";
+import { UserStatus } from "@/lib/userStatuses";
 
 interface User {
     username: string;
@@ -10,8 +11,10 @@ interface User {
 
 type UserContextType = {
     currentUser: User;
+    currentStatus: UserStatus;
 
     setCurrentUser: (currentUser: User) => void;
+    setCurrentStatus: (currentStatus: UserStatus) => void;
 };
 
 const UserContext = createContext<UserContextType | null>(null);
@@ -29,6 +32,7 @@ export function UserContextProvider({ children }: Readonly<{ children: ReactNode
         username: '',
         roomId: ''
     });
+    const [currentStatus, setCurrentStatus] = useState<UserStatus>(UserStatus.IDLE);
 
     // Load data from session storage - useRouter() doesn't support browser history state :(
     useEffect(() => {
@@ -50,7 +54,7 @@ export function UserContextProvider({ children }: Readonly<{ children: ReactNode
     };
 
     return (
-        <UserContext.Provider value={{ currentUser, setCurrentUser }}>
+        <UserContext.Provider value={{ currentUser, currentStatus, setCurrentUser, setCurrentStatus }}>
             {children}
         </UserContext.Provider>
     );

@@ -11,12 +11,31 @@ const io = new Server(server, {
     }
 });
 
+const rooms = {};
+
 io.on('connection', (socket) => {
-    socket.on('code-update', (code) => {
-        io.emit('code-update', code);
-        console.log('code update: ' + code);
-    })
-    console.log('a socket has connected');
+    socket.on('code-update', ({ roomId, code }) => {
+        socket.broadcast.to(roomId).emit('code-update', code);
+    });
+
+    socket.on('attempt-join', ({ username, roomId }) => {
+        // TODO - verify username for duplicates
+
+        const user = { username, roomId };
+
+        if(rooms[roomId]) {
+            rooms[roomId]['users'].push({ username, roomId });
+        } else {
+            rooms[roomId] = { users: [user] }
+        }
+
+        socket.join(roomId);
+        io.to(socket.id).emit('joined-room', { username, roomId });
+
+        console.log(username + ' has connected to room: ' + roomId);
+        console.log(rooms);
+    });
+    
 });
 
 server.listen(5000, () => {

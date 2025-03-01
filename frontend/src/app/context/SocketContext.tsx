@@ -4,9 +4,11 @@ import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { Socket, io } from 'socket.io-client';
 import { useEditorContext } from './EditorContext';
 import { SocketEvent } from '@/lib/socketEvents';
+import { useUserContext } from './UserContext';
+import { UserStatus } from '@/lib/userStatuses';
 
 type SocketContextType = {
-    socket: Socket | null;
+    socket: Socket;
 };
 
 const SocketContext = createContext<SocketContextType | null>(null);
@@ -21,13 +23,18 @@ export function useSocketContext() : SocketContextType {
 
 export function SocketContextProvider({ children }: Readonly<{ children: React.ReactNode }>) {
     const { setCode } = useEditorContext();
+    const { setCurrentUser, setCurrentStatus } = useUserContext();
 
     // Only create the socket once for an entire session
-    const socket = useMemo(() => io(process.env.BACKEND_SERVER_URL), []);
+    const socket = useMemo<Socket>(() => io(process.env.BACKEND_SERVER_URL), []);
 
     // Events
     socket.on(SocketEvent.CODE_UPDATE, (code: string) => setCode(code));
-    
+    socket.on(SocketEvent.JOINED_ROOM, ({ username, roomId }: { username: string, roomId: string }) => {
+        setCurrentUser({ username, roomId });
+        setCurrentStatus(UserStatus.JOINED_ROOM);
+    });
+
     return (
         <SocketContext.Provider value={{ socket }}>
             {children}

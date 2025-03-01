@@ -2,17 +2,17 @@
 
 import { useEditorContext } from "@/app/context/EditorContext";
 import { useSocketContext } from "@/app/context/SocketContext";
+import { useUserContext } from "@/app/context/UserContext";
 import { SocketEvent } from "@/lib/socketEvents";
 import { Editor } from "@monaco-editor/react";
 
 function CodeEditor() {
     const { code, setCode } = useEditorContext();
     const { socket } = useSocketContext();
+    const { currentUser } = useUserContext();
 
     const handleCodeChange = (value: string | undefined) => {
-        if(!socket) return; // TODO - show "Connecting..." toast
-
-        socket.emit(SocketEvent.CODE_UPDATE, value);
+        socket.emit(SocketEvent.CODE_UPDATE, { roomId: currentUser.roomId, code: value });
         setCode(value);
     };
 
