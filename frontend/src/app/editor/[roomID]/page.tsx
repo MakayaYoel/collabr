@@ -14,7 +14,7 @@ async function EditorPage({ params } : { params: Promise<{ roomID: string }> }) 
                 <EditorSidebar />
                 
                 <div className="grid h-full" style={{ gridTemplateRows: '3fr 1fr'}}>
-                    <CodeEditor />
+                    <CodeEditor paramsRoomId={roomID} />
 
                     <EditorCodeOutput />
                 </div>

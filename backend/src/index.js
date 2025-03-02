@@ -43,6 +43,7 @@ io.on('connection', (socket) => {
         room.users.set(socket.id, user);
 
         socket.join(roomId);
+        io.to(roomId).emit('user-joined', { username });
         io.to(socket.id).emit('joined-room', { username, roomId });
     });
 
@@ -52,12 +53,14 @@ io.on('connection', (socket) => {
         if(!userRoom) return;
 
         const room = rooms.get(userRoom);
+        const username = room.users.get(socket.id).username;
         room.users.delete(socket.id);
         socket.leave(userRoom);
 
         if(room.users.size == 0) rooms.delete(userRoom);
 
         io.to(socket.id).emit('leave-room');
+        io.to(userRoom).emit('user-left', { username });
     });
 
     // disconnecting from reloading
@@ -66,13 +69,17 @@ io.on('connection', (socket) => {
         if(!userRoom) return;
 
         const room = rooms.get(userRoom);
+        const username = room.users.get(socket.id).username;
         room.users.delete(socket.id);
         socket.leave(userRoom);
 
         if(room.users.size == 0) rooms.delete(userRoom);
+
+        io.to(socket.id).emit('leave-room');
+        io.to(userRoom).emit('user-left', { username });
     });
 });
 
 server.listen(5000, () => {
-    console.log('Backend started at http://localhost:5000');
+    console.log(`Backend Server Started: http://localhost:5000`);
 });

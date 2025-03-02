@@ -10,10 +10,10 @@ import { Editor } from "@monaco-editor/react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
-function CodeEditor() {
+function CodeEditor({ paramsRoomId }: { paramsRoomId: string }) {
     const { code, setCode } = useEditorContext();
     const { socket } = useSocketContext();
-    const { currentUser, setCurrentUser, currentStatus } = useUserContext();
+    const { currentUser, currentStatus } = useUserContext();
     const router = useRouter();
 
     const handleCodeChange = (value: string | undefined) => {
@@ -22,15 +22,20 @@ function CodeEditor() {
     };
 
     useEffect(() => {
+        // User came in from home page form submit
         if(currentUser.username && currentUser.roomId) return;
 
         const { getItem } = useSessionStorage();
         const sessionCurrentUser = getItem('currentUser');
 
+        // unknown user
         if(!sessionCurrentUser || !JSON.parse(sessionCurrentUser).username) {
             router.push('/');
+        } else if(JSON.parse(sessionCurrentUser).roomId !== paramsRoomId) {
+            router.push('/');
+            socket.emit(SocketEvent.LEAVE_ROOM);
         } else if(JSON.parse(sessionCurrentUser).username && JSON.parse(sessionCurrentUser).roomId) {
-            setCurrentUser(JSON.parse(sessionCurrentUser));
+            // user refreshed page
             socket.emit(SocketEvent.ATTEMPT_JOIN, JSON.parse(sessionCurrentUser));
         }
     }, [currentUser]);

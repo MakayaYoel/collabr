@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 import satoshiFont from "./lib/font";
 import ContextProvider from "./context/ContextProvider";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export const metadata: Metadata = {
   title: "collabr",
@@ -22,6 +24,10 @@ export default function RootLayout({
       <body className={satoshiFont.className}>
         <ContextProvider>
           {children}
+
+          <ToastContainer
+            pauseOnFocusLoss={false} 
+          />
         </ContextProvider>
       </body>
     </html>
