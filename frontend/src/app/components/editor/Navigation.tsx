@@ -44,7 +44,6 @@ function EditorNaviation() {
 
                     <div className="flex gap-6">
                         <EditorNavigationOption iconClassName="bx bx-code" optionName="Run Code" onClick={runCode} />
-                        <EditorNavigationOption iconClassName="bx bxs-user" optionName="Participants"  onClick={runCode} />
                         <EditorNavigationOption iconClassName="bx bxs-chat" optionName="Chat"  onClick={runCode} />
                     </div>
                 </div>

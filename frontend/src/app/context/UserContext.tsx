@@ -3,11 +3,7 @@
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import { useSessionStorage } from "../hooks/useSessionStorage";
 import { UserStatus } from "@/lib/userStatuses";
-
-interface User {
-    username: string;
-    roomId: string;
-};
+import { User } from "../types/types";
 
 type UserContextType = {
     currentUser: User;
@@ -43,6 +39,8 @@ export function UserContextProvider({ children }: Readonly<{ children: ReactNode
         if(sessionCurrentUser) {
             setStateCurrentUser(JSON.parse(sessionCurrentUser));
         }
+
+        console.log('loaded user context');
     }, []);
 
     // Custom setters (updates state and session storage)

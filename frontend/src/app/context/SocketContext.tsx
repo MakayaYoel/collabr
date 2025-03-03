@@ -7,6 +7,8 @@ import { SocketEvent } from '@/lib/socketEvents';
 import { useUserContext } from './UserContext';
 import { UserStatus } from '@/lib/userStatuses';
 import { toast } from 'react-toastify';
+import { useSessionStorage } from '../hooks/useSessionStorage';
+import { User } from '../types/types';
 
 type SocketContextType = {
     socket: Socket;
@@ -23,8 +25,8 @@ export function useSocketContext() : SocketContextType {
 }
 
 export function SocketContextProvider({ children }: Readonly<{ children: React.ReactNode }>) {
-    const { setCode, setCodeOutput } = useEditorContext();
-    const { setCurrentUser, setCurrentStatus } = useUserContext();
+    const { setCode, setCodeOutput, setRemoteUsers, remoteUsers } = useEditorContext();
+    const { setCurrentUser, setCurrentStatus, currentUser } = useUserContext();
 
     // Only create the socket on mounting
     const socket = useMemo<Socket>(() => io(process.env.BACKEND_SERVER_URL), []);
@@ -33,8 +35,10 @@ export function SocketContextProvider({ children }: Readonly<{ children: React.R
     useEffect(() => {
         socket.on(SocketEvent.CODE_UPDATE, (code: string) => setCode(code));
 
-        socket.on(SocketEvent.JOINED_ROOM, ({ username, roomId }: { username: string, roomId: string }) => {
+        socket.on(SocketEvent.JOINED_ROOM, ({ username, roomId, remoteUsers }: { username: string, roomId: string, remoteUsers: User[] }) => {
+            console.log(remoteUsers)
             setCurrentUser({ username, roomId });
+            setRemoteUsers(remoteUsers);
             setCurrentStatus(UserStatus.JOINED_ROOM);
         });
 
@@ -45,10 +49,12 @@ export function SocketContextProvider({ children }: Readonly<{ children: React.R
         });
 
         socket.on(SocketEvent.USER_JOINED, ({ username }: { username: string }) => {
+            setRemoteUsers([...remoteUsers, { username, roomId: currentUser.roomId }]);
             toast.success(`${username} has joined the room.`);
         });
 
         socket.on(SocketEvent.USER_LEFT, ({ username }: { username: string } ) => {
+            setRemoteUsers(remoteUsers.filter((user) => user.username !== username));
             toast.error(`${username} has left the room.`);
         });
 

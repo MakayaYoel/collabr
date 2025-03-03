@@ -43,8 +43,14 @@ io.on('connection', (socket) => {
         room.users.set(socket.id, user);
 
         socket.join(roomId);
-        io.to(roomId).emit('user-joined', { username });
-        io.to(socket.id).emit('joined-room', { username, roomId });
+        socket.broadcast.to(roomId).emit('user-joined', { username });
+
+        const remoteUsers = [];
+        room.users.forEach((user) => {
+            if(user.username !== username) remoteUsers.push({ username: user.username, roomId: user.roomId });
+        });
+        
+        io.to(socket.id).emit('joined-room', { username, roomId, remoteUsers });
     });
 
     // disconnecting from clicking home button
