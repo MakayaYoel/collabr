@@ -27,8 +27,22 @@ function getUserRoom(clientSocketId) {
     return userRoomId || null;
 }
 
+function getRoomParticipants(roomId) {
+    if(!rooms.has(roomId)) return [];
+    const room = rooms.get(roomId);
+
+    const roomParticipants = [];
+
+    room.users.forEach((user) => {
+        roomParticipants.push({ username: user.username, roomId: user.roomId });
+    });
+
+    return roomParticipants;
+}
+
 io.on('connection', (socket) => {
     socket.on('code-update', ({ roomId, code }) => {
+        rooms.get(roomId).code = code;
         socket.broadcast.to(roomId).emit('code-update', code);
     });
 
@@ -36,7 +50,7 @@ io.on('connection', (socket) => {
         const user = { username, roomId, socketId: socket.id };
 
         if(!rooms.has(roomId)) {
-            rooms.set(roomId, { users: new Map() });
+            rooms.set(roomId, { users: new Map(), code: '' });
         }
 
         const room = rooms.get(roomId);
@@ -51,6 +65,8 @@ io.on('connection', (socket) => {
         });
         
         io.to(socket.id).emit('joined-room', { username, roomId, remoteUsers });
+        io.to(socket.id).emit('code-update', room.code);
+        io.to(roomId).emit('change-users', getRoomParticipants(roomId));
     });
 
     socket.on('change-language', ({ language }) => {
@@ -74,6 +90,7 @@ io.on('connection', (socket) => {
 
         io.to(socket.id).emit('leave-room');
         io.to(userRoom).emit('user-left', { username });
+        io.to(userRoom).emit('change-users', getRoomParticipants(userRoom));
     });
 
     // disconnecting from reloading
@@ -90,6 +107,7 @@ io.on('connection', (socket) => {
 
         io.to(socket.id).emit('leave-room');
         io.to(userRoom).emit('user-left', { username });
+        io.to(userRoom).emit('change-users', getRoomParticipants(userRoom));
     });
 });
 

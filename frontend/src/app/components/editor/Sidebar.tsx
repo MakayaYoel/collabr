@@ -19,7 +19,6 @@ function EditorSidebar() {
                 </header>
 
                 <div className="flex flex-wrap mt-3 gap-2">
-                    <Participant user={currentUser} />
                     {remoteUsers.map((user: User) => {
                         return (
                             <Participant key={user.username} user={user} />

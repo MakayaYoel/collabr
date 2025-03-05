@@ -6,4 +6,5 @@ export enum SocketEvent {
     USER_JOINED = 'user-joined',
     USER_LEFT = 'user-left',
     CHANGE_LANGUAGE = 'change-language',
+    CHANGE_USERS = 'change-users'
 };

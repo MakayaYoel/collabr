@@ -47,18 +47,20 @@ export function SocketContextProvider({ children }: Readonly<{ children: React.R
         });
 
         socket.on(SocketEvent.USER_JOINED, ({ username }: { username: string }) => {
-            setRemoteUsers([...remoteUsers, { username, roomId: currentUser.roomId }]);
             toast.success(`${username} has joined the room.`);
         });
 
         socket.on(SocketEvent.USER_LEFT, ({ username }: { username: string } ) => {
-            setRemoteUsers(remoteUsers.filter((user) => user.username !== username));
             toast.error(`${username} has left the room.`);
         });
 
         socket.on(SocketEvent.CHANGE_LANGUAGE, ({ language }: { language: string }) => {
             setLanguage(language);
             toast.info(`The room language has been changed to: ${language}.`);
+        });
+
+        socket.on(SocketEvent.CHANGE_USERS, (newUsers: User[]) => {
+            setRemoteUsers(newUsers);
         });
 
         return () => {
