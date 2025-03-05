@@ -57,8 +57,6 @@ io.on('connection', (socket) => {
         const userRoom = getUserRoom(socket.id);
         if(!userRoom) return;
 
-        console.log(language);
-
         io.to(userRoom).emit('change-language', { language });
     });
 
