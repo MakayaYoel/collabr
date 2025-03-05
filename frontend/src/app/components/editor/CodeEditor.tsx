@@ -11,7 +11,7 @@ import { UserStatus } from "@/lib/userStatuses";
 import { useRouter } from "next/navigation";
 
 function CodeEditor({ paramsRoomId }: { paramsRoomId: string }) {
-    const { code, setCode, language } = useEditorContext(); // Language state
+    const { code, setCode, language } = useEditorContext();
     const { socket } = useSocketContext();
     const { currentUser, currentStatus } = useUserContext();
     const router = useRouter();

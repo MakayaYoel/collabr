@@ -7,7 +7,6 @@ import { SocketEvent } from '@/lib/socketEvents';
 import { useUserContext } from './UserContext';
 import { UserStatus } from '@/lib/userStatuses';
 import { toast } from 'react-toastify';
-import { useSessionStorage } from '../hooks/useSessionStorage';
 import { User } from '../types/types';
 
 type SocketContextType = {
@@ -36,7 +35,6 @@ export function SocketContextProvider({ children }: Readonly<{ children: React.R
         socket.on(SocketEvent.CODE_UPDATE, (code: string) => setCode(code));
 
         socket.on(SocketEvent.JOINED_ROOM, ({ username, roomId, remoteUsers }: { username: string, roomId: string, remoteUsers: User[] }) => {
-            console.log(remoteUsers)
             setCurrentUser({ username, roomId });
             setRemoteUsers(remoteUsers);
             setCurrentStatus(UserStatus.JOINED_ROOM);

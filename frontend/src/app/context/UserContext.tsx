@@ -39,8 +39,6 @@ export function UserContextProvider({ children }: Readonly<{ children: ReactNode
         if(sessionCurrentUser) {
             setStateCurrentUser(JSON.parse(sessionCurrentUser));
         }
-
-        console.log('loaded user context');
     }, []);
 
     // Custom setters (updates state and session storage)
