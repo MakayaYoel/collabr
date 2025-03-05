@@ -66,6 +66,8 @@ export function SocketContextProvider({ children }: Readonly<{ children: React.R
             socket.off(SocketEvent.JOINED_ROOM);
             socket.off(SocketEvent.LEAVE_ROOM);
             socket.off(SocketEvent.USER_JOINED);
+            socket.off(SocketEvent.USER_LEFT);
+            socket.off(SocketEvent.CHANGE_LANGUAGE);
         }
     }, []);
 
