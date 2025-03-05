@@ -2,6 +2,8 @@
 
 import { useUserContext } from "@/app/context/UserContext";
 import { Card } from "@/components/ui/card";
+import CopyToClipboard from "./CopyToClipboard";
+import { truncateString } from "@/lib/utils";
 
 function EditorUserProfile() {
     const { currentUser } = useUserContext();
@@ -11,7 +13,8 @@ function EditorUserProfile() {
         <Card className="p-4 mt-6">
             <p>
                 <span className="font-bold">Room ID: </span>
-                <span>{ roomId.length > 20 ? `${roomId.slice(0, 20)}...` : roomId }</span>
+                <span>{ truncateString(roomId, 20) }</span>
+                <CopyToClipboard />
             </p>
 
             <p>

@@ -25,7 +25,7 @@ export function useSocketContext() : SocketContextType {
 }
 
 export function SocketContextProvider({ children }: Readonly<{ children: React.ReactNode }>) {
-    const { setCode, setCodeOutput, setRemoteUsers, remoteUsers } = useEditorContext();
+    const { setCode, setCodeOutput, setRemoteUsers, setLanguage, remoteUsers } = useEditorContext();
     const { setCurrentUser, setCurrentStatus, currentUser } = useUserContext();
 
     // Only create the socket on mounting
@@ -56,6 +56,11 @@ export function SocketContextProvider({ children }: Readonly<{ children: React.R
         socket.on(SocketEvent.USER_LEFT, ({ username }: { username: string } ) => {
             setRemoteUsers(remoteUsers.filter((user) => user.username !== username));
             toast.error(`${username} has left the room.`);
+        });
+
+        socket.on(SocketEvent.CHANGE_LANGUAGE, ({ language }: { language: string }) => {
+            setLanguage(language);
+            toast.info(`The room language has been changed to: ${language}.`);
         });
 
         return () => {

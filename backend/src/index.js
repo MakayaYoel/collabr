@@ -53,6 +53,15 @@ io.on('connection', (socket) => {
         io.to(socket.id).emit('joined-room', { username, roomId, remoteUsers });
     });
 
+    socket.on('change-language', ({ language }) => {
+        const userRoom = getUserRoom(socket.id);
+        if(!userRoom) return;
+
+        console.log(language);
+
+        io.to(userRoom).emit('change-language', { language });
+    });
+
     // disconnecting from clicking home button
     socket.on('leave-room', () => {
         const userRoom = getUserRoom(socket.id);

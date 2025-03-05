@@ -1,5 +1,7 @@
 'use client';
 
+import { useEditorContext } from "@/app/context/EditorContext";
+import { useSocketContext } from "@/app/context/SocketContext";
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -10,10 +12,15 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { useState } from "react";
+import { SocketEvent } from "@/lib/socketEvents";
 
 function EditorLanguageDropdown() {
-    const [language, setLanguage] = useState("javascript")
+    const { language } = useEditorContext();
+    const { socket } = useSocketContext();
+
+    const setLanguage = (language: string) => {
+      socket.emit(SocketEvent.CHANGE_LANGUAGE, { language });
+    };
  
     return (
         <DropdownMenu>

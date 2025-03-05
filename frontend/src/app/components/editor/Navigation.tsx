@@ -8,7 +8,7 @@ import { useSocketContext } from "@/app/context/SocketContext";
 import { SocketEvent } from "@/lib/socketEvents";
 
 function EditorNaviation() {
-    const { code, setCodeOutput } = useEditorContext();
+    const { code, setCodeOutput, language } = useEditorContext();
     const { socket } = useSocketContext();
 
     const runCode = async () => {
@@ -20,7 +20,7 @@ function EditorNaviation() {
             const response = await fetch('/api/run', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ language: 'javascript', code })
+                body: JSON.stringify({ language, code })
             });
     
             const result = await response.json();

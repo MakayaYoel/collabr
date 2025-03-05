@@ -4,5 +4,6 @@ export enum SocketEvent {
     JOINED_ROOM = 'joined-room',
     LEAVE_ROOM = 'leave-room',
     USER_JOINED = 'user-joined',
-    USER_LEFT = 'user-left'
+    USER_LEFT = 'user-left',
+    CHANGE_LANGUAGE = 'change-language',
 };
