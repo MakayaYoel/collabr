@@ -4,6 +4,12 @@ My attempt at a real-time code collaboration web application that allows multipl
 
 **Languages/Frameworks/Libraries Used:** TypeScript, Next.js, Socket.IO, Shadcn
 
+## Preview
+
+
+https://github.com/user-attachments/assets/76cd49a6-0841-4f56-981c-48175d07f128
+
+
 ### Installation
 
 1. **Clone the repository:**
